@@ -1,0 +1,7 @@
+0> cd to this folder
+cd /d C:\tmp\MicroserviceAssignment\MS1
+1> dotnet new webapi -o MyMicroservice --no-https -f net6.0
+2> cd MyMicroservice
+3> dotnet watch run
+Now you should be able to see a browser with url
+http://localhost:port_no/swagger/index.html
