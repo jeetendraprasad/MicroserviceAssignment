@@ -5,3 +5,34 @@ cd /d C:\tmp\MicroserviceAssignment\MS1
 3> dotnet watch run
 Now you should be able to see a browser with url
 http://localhost:port_no/swagger/index.html
+4> Atop debugging
+5> fsutil file createnew Dockerfile 0
+6> "start Dockerfile" OR open Dockerfile into notepad.exe / notepad++.exe
+7> Update Dockerfile with content
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+COPY MyMicroservice.csproj .
+RUN dotnet restore
+COPY . .
+RUN dotnet publish -c release -o /app
+
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
+WORKDIR /app
+COPY --from=build /app .
+ENTRYPOINT ["dotnet", "MyMicroservice.dll"]
+
+8> fsutil file createnew .dockerignore 0
+9> start .dockerignore
+
+10> Update .dockerignore with content
+
+Dockerfile
+[b|B]in
+[O|o]bj
+
+11> docker build -t mymicroservice .
+12> docker images
+13> docker run -it --rm -p 3000:80 --name mymicroservicecontainer mymicroservice
+14> Open url in browser : http://localhost:3000/WeatherForecast
+15> docker ps
