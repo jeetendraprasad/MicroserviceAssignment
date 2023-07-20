@@ -1,0 +1,25 @@
+STEPS:-
+
+1> npm install -g typescript
+2> tsc --version
+3> mkdir gateway_svc
+4> cd gateway_svc
+5> npm init
+6> tsc --init
+7> npm install typescript
+8> npm install express
+9> npm install @types/express
+10> mkdir src
+11> Code changes
+-> Modify file src/index.ts
+-> Modify file package.json
+-> Modify file tsconfig.json
+
+12> npm run build
+13> npm run serve
+
+
+14> Test Using
+curl http://localhost:8080/api/v1/hey
+which sends output as:
+Hello World!
