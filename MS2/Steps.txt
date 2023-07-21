@@ -23,3 +23,72 @@ STEPS:-
 curl http://localhost:8080/api/v1/hey
 which sends output as:
 Hello World!
+
+
+
+Deployment
+----------
+
+1> Create a Dockerfile with content
+
+FROM node:16-slim
+
+WORKDIR /server
+COPY package*.json ./
+RUN npm install
+
+EXPOSE 8080
+
+COPY . .
+
+RUN npm run build
+CMD npm run serve
+
+
+2> Build the docker image.
+docker build ./ -t gateway
+
+
+docker run -d -it -p 3000:8080 gateway
+docker ps --format "table {{.ID}}\t{{.Image}}\t{{.Ports}}"
+curl localhost:3000/api/v1/hey
+docker stop 2a028218cc70
+
+3> Minikube 
+minikube start
+minikube docker-env
+@FOR /f "tokens=*" %i IN ('minikube -p minikube docker-env --shell cmd') DO @%i
+
+docker images
+
+docker build ./ -t gateway
+docker images --format "table {{.ID}}\t{{.Tag}}\t{{.Repository}}"
+
+kubectl create -f gateway-deployment.yaml
+kubectl get pods
+kubectl get pods -o=custom-columns=NAME:.metadata.name,IP:.status.podIP
+
+minikube ssh
+curl 10.244.0.3:8080/api/v1/hey
+exit
+
+
+kubectl apply -f gateway-service.yaml
+kubectl get services -o=custom-columns=NAME:.metadata.name,IP:.spec.clusterIP
+minikube ssh
+curl 10.102.200.243:80/api/v1/hey
+exit
+
+minikube status
+minikube service gateway-service --url
+curl http://127.0.0.1:64374/api/v1/hey
+
+
+
+
+
+
+
+
+
+
