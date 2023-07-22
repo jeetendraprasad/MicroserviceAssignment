@@ -3,3 +3,6 @@ MS1/MyMicroservice/bin
 MS1/MyMicroservice/obj
 MS2/gateway_svc/node_modules
 MS2/gateway_svc/dist
+temp/microservices-demo-master/
+MS3/auth_svc/node_modules
+MS3/auth_svc/dist/index.js
