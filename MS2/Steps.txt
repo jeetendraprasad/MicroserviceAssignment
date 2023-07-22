@@ -84,6 +84,20 @@ minikube service gateway-service --url
 curl http://127.0.0.1:64374/api/v1/hey
 
 
+DASHBOARD
+---------
+minikube dashboard
+
+
+
+
+
+-------------- EXTRA IGNORE --------------
+minikube start --ports=127.0.01:{portnumber}:{portnumber}
+
+
+
+
 
 
 
