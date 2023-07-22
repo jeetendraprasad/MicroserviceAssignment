@@ -50,11 +50,11 @@ docker build ./ -t gateway
 
 
 docker run -d -it -p 3000:8080 gateway
-docker ps --format "table {{.ID}}\t{{.Image}}\t{{.Ports}}"
+docker ps --format "table {{.ID}}\t{{.Image}}\t{{.Ports}}" --> NOTE container id which will be used later to stop docker
 curl localhost:3000/api/v1/hey
-docker stop 2a028218cc70
+docker stop 9011286c44c5
 
-3> Minikube 
+3> Minikube
 minikube start
 minikube docker-env
 @FOR /f "tokens=*" %i IN ('minikube -p minikube docker-env --shell cmd') DO @%i
@@ -64,24 +64,74 @@ docker images
 docker build ./ -t gateway
 docker images --format "table {{.ID}}\t{{.Tag}}\t{{.Repository}}"
 
+
+
+create file 'gateway-deployment.yaml' with content as
+
+
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway-app
+  template:
+    metadata:
+      labels:
+        app: gateway-app
+    spec:
+      containers:
+      - name: gateway-container
+        image: gateway:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+
+
+
 kubectl create -f gateway-deployment.yaml
+
+
 kubectl get pods
-kubectl get pods -o=custom-columns=NAME:.metadata.name,IP:.status.podIP
+kubectl get pods -o=custom-columns=NAME:.metadata.name,IP:.status.podIP --> NOTE: Output ip will be used later
 
 minikube ssh
 curl 10.244.0.3:8080/api/v1/hey
 exit
 
 
-kubectl apply -f gateway-service.yaml
-kubectl get services -o=custom-columns=NAME:.metadata.name,IP:.spec.clusterIP
+4>	Now we create file ‘gateway-service.yaml’ with content
+
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: gateway-service
+spec:
+  type: NodePort
+  selector:
+    app: gateway-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+
+
+5> kubectl apply -f gateway-service.yaml
+kubectl get services -o=custom-columns=NAME:.metadata.name,IP:.spec.clusterIP --> NOTE: Output ip will be used later
 minikube ssh
-curl 10.102.200.243:80/api/v1/hey
+curl 10.97.203.247:80/api/v1/hey
 exit
 
 minikube status
-minikube service gateway-service --url
+minikube service gateway-service --url --> NOTE: Output url will be used later
 curl http://127.0.0.1:64374/api/v1/hey
+In browser also we can access url as: http://127.0.0.1:64374/api/v1/hey
 
 
 DASHBOARD
