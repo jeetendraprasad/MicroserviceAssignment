@@ -6,3 +6,5 @@ MS2/gateway_svc/dist
 temp/microservices-demo-master/
 MS3/auth_svc/node_modules
 MS3/auth_svc/dist/index.js
+MS4/books_svc/node_modules
+MS4/books_svc/dist
